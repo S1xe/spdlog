@@ -263,6 +263,7 @@ namespace internal
 inline uint32_t clz(uint32_t x)
 {
     unsigned long r = 0;
+    /** _BitScanReverse用于查找x的二进制数第一位1出现的位置,非0则存在 */
     _BitScanReverse(&r, x);
 
     assert(x != 0);
@@ -510,6 +511,7 @@ public:
     }
 
     // Lexicographically compare this string reference to other.
+    // 比较长度最小的那段字符,若一致则比较长度
     int compare(BasicStringRef other) const
     {
         std::size_t size = size_ < other.size_ ? size_ : other.size_;
@@ -573,6 +575,8 @@ typedef BasicStringRef<wchar_t> WStringRef;
     format(std::string("{}"), 42);
   \endrst
  */
+
+//C -> const
 template <typename Char>
 class BasicCStringRef
 {
@@ -613,6 +617,7 @@ namespace internal
 {
 
 // MakeUnsigned<T>::Type gives an unsigned type corresponding to integer type T.
+// 用于转换成无符号
 template <typename T>
 struct MakeUnsigned
 {
@@ -833,6 +838,7 @@ public:
 template <typename T, std::size_t SIZE, typename Allocator>
 void MemoryBuffer<T, SIZE, Allocator>::grow(std::size_t size)
 {
+    //以1.5增长更为科学
     std::size_t new_capacity = this->capacity_ + this->capacity_ / 2;
     if (size > new_capacity)
         new_capacity = size;
@@ -943,6 +949,7 @@ struct SignChecker<false>
 template <typename T>
 inline bool is_negative(T value)
 {
+    //判断是有有符号,再判断是否为负
     return SignChecker<std::numeric_limits<T>::is_signed>::is_negative(value);
 }
 
@@ -1004,6 +1011,7 @@ inline unsigned count_digits(uint64_t n)
 }
 #else
 // Fallback version of count_digits used when __builtin_clz is not available.
+// 计算位数
 inline unsigned count_digits(uint64_t n)
 {
     unsigned count = 1;
@@ -1173,7 +1181,7 @@ FMT_API void format_windows_error(fmt::Writer &out, int error_code,
 
 FMT_API void format_system_error(fmt::Writer &out, int error_code,
                                  fmt::StringRef message) FMT_NOEXCEPT;
-
+// READING HERE
 // A formatting argument value.
 struct Value
 {

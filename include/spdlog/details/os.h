@@ -60,7 +60,7 @@ namespace details
 {
 namespace os
 {
-
+/** 获取当前时间 */
 inline spdlog::log_clock::time_point now()
 {
 
@@ -77,6 +77,7 @@ inline spdlog::log_clock::time_point now()
 #endif
 
 }
+/** 获取本地时间 */
 inline std::tm localtime(const std::time_t &time_tt)
 {
 
@@ -115,6 +116,7 @@ inline std::tm gmtime()
     std::time_t now_t = time(nullptr);
     return gmtime(now_t);
 }
+/** 时间比较 */
 inline bool operator==(const std::tm& tm1, const std::tm& tm2)
 {
     return (tm1.tm_sec == tm2.tm_sec &&

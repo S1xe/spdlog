@@ -70,6 +70,7 @@ using log_err_handler = std::function<void(const std::string &err_msg)>;
 //Log level enum
 namespace level
 {
+/* 不同模式的设定 */
 typedef enum
 {
     trace = 0,
@@ -100,6 +101,10 @@ inline const char* to_short_str(spdlog::level::level_enum l)
 //
 // Async overflow policy - block by default.
 //
+/** 异步操作策略 
+ *  block_retry     :保证进队
+ *  discord_log_msg :进队失败则抛弃
+*/
 enum class async_overflow_policy
 {
     block_retry, // Block / yield / sleep until message can be enqueued
