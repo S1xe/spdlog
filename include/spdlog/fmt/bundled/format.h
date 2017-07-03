@@ -1181,7 +1181,7 @@ FMT_API void format_windows_error(fmt::Writer &out, int error_code,
 
 FMT_API void format_system_error(fmt::Writer &out, int error_code,
                                  fmt::StringRef message) FMT_NOEXCEPT;
-// READING HERE
+
 // A formatting argument value.
 struct Value
 {
@@ -1300,7 +1300,7 @@ struct ConvertToInt
   template <> \
   struct ConvertToInt<Type> {  enum { value = 0 }; }
 
-// Silence warnings about convering float to int.
+// Silence warnings about converting float to int.
 FMT_DISABLE_CONVERSION_TO_INT(float);
 FMT_DISABLE_CONVERSION_TO_INT(double);
 FMT_DISABLE_CONVERSION_TO_INT(long double);
@@ -1501,7 +1501,7 @@ public:
 
     FMT_MAKE_VALUE(void *, pointer, POINTER)
     FMT_MAKE_VALUE(const void *, pointer, POINTER)
-
+    /** 不能转换成INT的,用custom来处理 */
     template <typename T>
     MakeValue(const T &value,
               typename EnableIf<Not<
@@ -2102,6 +2102,7 @@ FMT_DEFINE_INT_FORMATTERS(ULongLong)
 
   \endrst
  */
+//Reading Here
 template <typename Char>
 inline StrFormatSpec<Char> pad(
     const Char *str, unsigned width, Char fill = ' ')
