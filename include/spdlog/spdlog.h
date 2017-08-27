@@ -7,7 +7,7 @@
 
 #pragma once
 
-#define SPDLOG_VERSION "0.13.0"
+#define SPDLOG_VERSION "0.14.0"
 
 #include "spdlog/tweakme.h"
 #include "spdlog/common.h"
@@ -69,7 +69,7 @@ void set_sync_mode();
 
 //
 // Create and register multi/single threaded basic file logger.
-// Basic logger simply writes to given file without any limitatons or rotations.
+// Basic logger simply writes to given file without any limitations or rotations.
 //
 std::shared_ptr<logger> basic_logger_mt(const std::string& logger_name, const filename_t& filename, bool truncate = false);
 std::shared_ptr<logger> basic_logger_st(const std::string& logger_name, const filename_t& filename, bool truncate = false);
@@ -168,10 +168,16 @@ void drop_all();
 #ifdef SPDLOG_TRACE_ON
 #define SPDLOG_STR_H(x) #x
 #define SPDLOG_STR_HELPER(x) SPDLOG_STR_H(x)
-#define SPDLOG_TRACE(logger, ...) logger->trace("[" __FILE__ " line #" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
-#define SPDLOG_TRACE_IF(logger, flag, ...) logger->trace_if(flag, "[" __FILE__ " line #" SPDLOG_STR_HELPER(__LINE__) "] " __VA_ARGS__)
+#ifdef _MSC_VER
+  #define SPDLOG_TRACE(logger, ...) logger->trace("[ " __FILE__ "(" SPDLOG_STR_HELPER(__LINE__) ") ] " __VA_ARGS__)
+  #define SPDLOG_TRACE_IF(logger, flag, ...) logger.trace_if(flag, "[ " __FILE__ "(" SPDLOG_STR_HELPER(__LINE__) ") ] " __VA_ARGS__)
+#else
+  #define SPDLOG_TRACE(logger, ...) logger->trace("[ " __FILE__ ":" SPDLOG_STR_HELPER(__LINE__) " ] " __VA_ARGS__)
+  #define SPDLOG_TRACE_IF(logger, flag, ...) logger.trace_if(flag, "[ " __FILE__ ":" SPDLOG_STR_HELPER(__LINE__) " ] " __VA_ARGS__)
+#endif
 #else
 #define SPDLOG_TRACE(logger, ...)
+#define SPDLOG_TRACE_IF(logger, flag, ...)
 #endif
 
 #ifdef SPDLOG_DEBUG_ON
@@ -179,6 +185,7 @@ void drop_all();
 #define SPDLOG_DEBUG_IF(logger, flag, ...) logger->debug_if(flag, __VA_ARGS__)
 #else
 #define SPDLOG_DEBUG(logger, ...)
+#define SPDLOG_DEBUG_IF(logger, flag, ...)
 #endif
 
 }
